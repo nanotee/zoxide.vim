@@ -1,9 +1,17 @@
+function! zoxide#exec(cmd) abort
+    let result = systemlist(join(a:cmd))
+    if v:shell_error
+        echohl ErrorMsg | echo join(result, '\n') | echohl None
+    endif
+    return result
+endfunction
+
 function! s:change_directory(directory, cmd) abort
     if !isdirectory(a:directory) | echoerr 'Not a directory' | return | endif
 
     exe a:cmd a:directory
     pwd
-    call system(join(['zoxide', 'add']))
+    call zoxide#exec(['zoxide', 'add'])
 endfunction
 
 function! zoxide#z(query, local) abort
@@ -14,12 +22,8 @@ function! zoxide#z(query, local) abort
         call s:change_directory(directory, cmd)
         return
     endif
-    let result = systemlist(join(['zoxide', 'query', directory]))[0]
-    if v:shell_error
-        echohl ErrorMsg | echo result | echohl None
-        return
-    endif
-    call s:change_directory(result, cmd)
+    let result = zoxide#exec(['zoxide', 'query', directory])[0]
+    if !v:shell_error | call s:change_directory(result, cmd) | endif
 endfunction
 
 function! zoxide#zi(query, local, bang) abort
@@ -32,7 +36,7 @@ function! zoxide#zi(query, local, bang) abort
     endfunction
 
     call fzf#run(fzf#wrap('zoxide', {
-                \ 'source': systemlist(join(['zoxide', 'query', '--list', '--score', a:query])),
+                \ 'source': zoxide#exec(['zoxide', 'query', '--list', '--score', a:query]),
                 \ 'sink': funcref('s:handle_fzf_result'),
                 \ 'options': '--prompt="Zoxide> "',
                 \ }, a:bang))

@@ -12,8 +12,8 @@ command! -nargs=? -complete=file Lz call zoxide#z(<q-args>, v:true)
 command! -nargs=? -bang Zi call zoxide#zi(<q-args>, v:false, <bang>0)
 command! -nargs=? -bang Lzi call zoxide#zi(<q-args>, v:true, <bang>0)
 
-command! -nargs=? -complete=file Za !zoxide add <q-args>
-command! -nargs=? -complete=file Zr !zoxide remove <q-args>
+command! -nargs=? -complete=file Za call zoxide#exec(['zoxide', 'add', <q-args>])
+command! -nargs=? -complete=file Zr call zoxide#exec(['zoxide', 'remove', <q-args>])
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
