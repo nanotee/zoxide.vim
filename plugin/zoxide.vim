@@ -6,14 +6,22 @@ let g:loaded_zoxide = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-command! -nargs=? -complete=dir Z call zoxide#z(<q-args>, v:false)
-command! -nargs=? -complete=dir Lz call zoxide#z(<q-args>, v:true)
+let s:z_cmd = toupper(get(g:, 'zoxide_prefix', 'z'))
 
-command! -nargs=? -bang Zi call zoxide#zi(<q-args>, v:false, <bang>0)
-command! -nargs=? -bang Lzi call zoxide#zi(<q-args>, v:true, <bang>0)
+" Z
+" LZ
+execute 'command! -nargs=? -complete=dir '..s:z_cmd..' call zoxide#z(<q-args>, v:false)'
+execute 'command! -nargs=? -complete=dir L'..s:z_cmd..' call zoxide#z(<q-args>, v:true)'
 
-command! -nargs=? -complete=dir Za call zoxide#exec(['add', <q-args>])
-command! -nargs=? -complete=dir Zr call zoxide#exec(['remove', <q-args>])
+" Zi
+" LZi
+execute 'command! -nargs=? -bang '..s:z_cmd..'i call zoxide#zi(<q-args>, v:false, <bang>0)'
+execute 'command! -nargs=? -bang L'..s:z_cmd..'i call zoxide#zi(<q-args>, v:true, <bang>0)'
+
+" Za
+" Zr
+execute 'command! -nargs=? -complete=dir '..s:z_cmd..'a call zoxide#exec(["add", <q-args>])'
+execute 'command! -nargs=? -complete=dir '..s:z_cmd..'r call zoxide#exec(["remove", <q-args>])'
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
