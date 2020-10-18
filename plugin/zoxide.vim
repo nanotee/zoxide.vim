@@ -11,13 +11,13 @@ let s:z_cmd_cap = toupper(s:z_cmd[0])..strcharpart(s:z_cmd, 1)
 
 " Z
 " Lz
-execute 'command! -nargs=? -complete=dir '..s:z_cmd_cap..' call zoxide#z(<q-args>, v:false)'
-execute 'command! -nargs=? -complete=dir L'..s:z_cmd..' call zoxide#z(<q-args>, v:true)'
+execute 'command! -nargs=? -complete=dir '..s:z_cmd_cap..' call zoxide#z("cd", <q-args>)'
+execute 'command! -nargs=? -complete=dir L'..s:z_cmd..' call zoxide#z("lcd", <q-args>)'
 
 " Zi
 " Lzi
-execute 'command! -nargs=? -bang '..s:z_cmd_cap..'i call zoxide#zi(<q-args>, v:false, <bang>0)'
-execute 'command! -nargs=? -bang L'..s:z_cmd..'i call zoxide#zi(<q-args>, v:true, <bang>0)'
+execute 'command! -nargs=? -bang '..s:z_cmd_cap..'i call zoxide#zi("cd", <q-args>, <bang>0)'
+execute 'command! -nargs=? -bang L'..s:z_cmd..'i call zoxide#zi("lcd", <q-args>, <bang>0)'
 
 " Za
 " Zr
