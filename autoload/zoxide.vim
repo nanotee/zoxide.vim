@@ -29,18 +29,18 @@ function! zoxide#z(query, local) abort
     if !v:shell_error | call s:change_directory(result, cmd) | endif
 endfunction
 
+function! s:handle_fzf_result(local, result) abort
+    let cmd = a:local ? 'lcd' : 'cd'
+    let directory = substitute(a:result, '^\s*\d*\s*', '', '')
+    call s:change_directory(directory, cmd)
+endfunction
+
 function! zoxide#zi(query, local, bang) abort
     if !exists('g:loaded_fzf') | echoerr 'The fzf.vim plugin must be installed' | return | endif
 
-    function! s:handle_fzf_result(result) abort closure
-        let cmd = a:local ? 'lcd' : 'cd'
-        let directory = substitute(a:result, '^\s*\d*\s*', '', '')
-        call s:change_directory(directory, cmd)
-    endfunction
-
     call fzf#run(fzf#wrap('zoxide', {
                 \ 'source': zoxide#exec(['query', '--list', '--score', a:query]),
-                \ 'sink': funcref('s:handle_fzf_result'),
+                \ 'sink': funcref('s:handle_fzf_result', [a:local]),
                 \ 'options': '--prompt="Zoxide> "',
                 \ }, a:bang))
 endfunction
