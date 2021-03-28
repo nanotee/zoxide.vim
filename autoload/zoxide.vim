@@ -1,5 +1,5 @@
 function! zoxide#exec(cmd) abort
-    let full_cmd = extend([get(g:, 'zoxide_executable', 'zoxide')], a:cmd)
+    let full_cmd = map(extend([get(g:, 'zoxide_executable', 'zoxide')], a:cmd), {_, arg -> shellescape(arg)})
     let result = systemlist(join(full_cmd))
     if v:shell_error
         echohl ErrorMsg | echo join(result, "\n") | echohl None
@@ -35,9 +35,11 @@ endfunction
 
 function! zoxide#zi(cd_command, query, bang) abort
     if !exists('g:loaded_fzf') | echoerr 'The fzf.vim plugin must be installed' | return | endif
+    let zoxide_cmd = ['query', '--list', '--score']
+    if a:query !=# '' | call extend(zoxide_cmd, [a:query]) | endif
 
     call fzf#run(fzf#wrap('zoxide', {
-                \ 'source': zoxide#exec(['query', '--list', '--score', a:query]),
+                \ 'source': zoxide#exec(zoxide_cmd),
                 \ 'sink': funcref('s:handle_fzf_result', [a:cd_command]),
                 \ 'options': '--prompt="Zoxide> "',
                 \ }, a:bang))
