@@ -33,8 +33,6 @@ The plugin defines several commands that wrap the functionality of zoxide:
 - `:Zi {query}`: cd to one of your highest ranking directories using fzf
 - `:Lzi {query}`: same as `:Zi`, but local to the current window
 - `:Tzi {query}`: same as `:Zi`, but local to the current tab
-- `:Za {query}`: add a directory to the zoxide database or increase its score
-- `:Zr {query}`: remove a directory from the zoxide database
 
 ## Configuration
 
@@ -57,10 +55,16 @@ The plugin defines several commands that wrap the functionality of zoxide:
     :Jumpi
     :Ljumpi
     :Tjumpi
-    :Jumpa
-    :Jumpr
     ```
 
 - `g:zoxide_update_score` (default value: `1`)
 
     Decides whether the zoxide database should be updated when you cd into a directory
+
+- `g:zoxide_legacy_aliases` (default value: `0`)
+
+    Defines aliases `Za` and `Zr`.
+    These were removed from the main zoxide package because they were used too infrequently: [ajeetdsouza/zoxide#158](https://github.com/ajeetdsouza/zoxide/pull/158)
+    (They probably don't warrant adding any kind of alias in Vim either because it's really easy to use `!zoxide add {query}`)
+
+    I'm going to remove them in the future.

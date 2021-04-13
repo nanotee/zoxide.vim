@@ -23,10 +23,12 @@ execute 'command! -nargs=? -bang ' .. s:z_cmd_cap .. 'i call zoxide#zi("cd", <q-
 execute 'command! -nargs=? -bang L' .. s:z_cmd .. 'i call zoxide#zi("lcd", <q-args>, <bang>0)'
 execute 'command! -nargs=? -bang T' .. s:z_cmd .. 'i call zoxide#zi("tcd", <q-args>, <bang>0)'
 
-" Za
-" Zr
-execute 'command! -nargs=? -complete=dir ' .. s:z_cmd_cap .. 'a call zoxide#exec(["add", <q-args>])'
-execute 'command! -nargs=? -complete=dir ' .. s:z_cmd_cap .. 'r call zoxide#exec(["remove", <q-args>])'
+if get(g:, 'zoxide_legacy_aliases', 0)
+    " Za
+    " Zr
+    execute 'command! -nargs=? -complete=dir ' .. s:z_cmd_cap .. 'a call zoxide#exec(["add", <q-args>])'
+    execute 'command! -nargs=? -complete=dir ' .. s:z_cmd_cap .. 'r call zoxide#exec(["remove", <q-args>])'
+endif
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
