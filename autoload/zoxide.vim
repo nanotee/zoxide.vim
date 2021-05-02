@@ -13,7 +13,7 @@ function! s:change_directory(cd_command, directory) abort
     exe a:cd_command a:directory
     pwd
     if get(g:, 'zoxide_update_score', 1)
-        call zoxide#exec(['add'])
+        call zoxide#exec(['add', a:directory])
     endif
 endfunction
 
