@@ -12,16 +12,16 @@ let s:z_cmd_cap = toupper(s:z_cmd[0]) .. strcharpart(s:z_cmd, 1)
 " Z
 " Lz
 " Tz
-execute 'command! -nargs=? -complete=dir ' .. s:z_cmd_cap .. ' call zoxide#z("cd", <q-args>)'
-execute 'command! -nargs=? -complete=dir L' .. s:z_cmd .. ' call zoxide#z("lcd", <q-args>)'
-execute 'command! -nargs=? -complete=dir T' .. s:z_cmd .. ' call zoxide#z("tcd", <q-args>)'
+execute 'command! -nargs=* -complete=dir ' .. s:z_cmd_cap .. ' call zoxide#z("cd", <f-args>)'
+execute 'command! -nargs=* -complete=dir L' .. s:z_cmd .. ' call zoxide#z("lcd", <f-args>)'
+execute 'command! -nargs=* -complete=dir T' .. s:z_cmd .. ' call zoxide#z("tcd", <f-args>)'
 
 " Zi
 " Lzi
 " Tzi
-execute 'command! -nargs=? -bang ' .. s:z_cmd_cap .. 'i call zoxide#zi("cd", <q-args>, <bang>0)'
-execute 'command! -nargs=? -bang L' .. s:z_cmd .. 'i call zoxide#zi("lcd", <q-args>, <bang>0)'
-execute 'command! -nargs=? -bang T' .. s:z_cmd .. 'i call zoxide#zi("tcd", <q-args>, <bang>0)'
+execute 'command! -nargs=* -bang ' .. s:z_cmd_cap .. 'i call zoxide#zi("cd", <bang>0, <f-args>)'
+execute 'command! -nargs=* -bang L' .. s:z_cmd .. 'i call zoxide#zi("lcd", <bang>0, <f-args>)'
+execute 'command! -nargs=* -bang T' .. s:z_cmd .. 'i call zoxide#zi("tcd", <bang>0, <f-args>)'
 
 if get(g:, 'zoxide_legacy_aliases', 0)
     " Za
