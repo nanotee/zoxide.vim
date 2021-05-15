@@ -1,5 +1,5 @@
-function! zoxide#exec(cmd) abort
-    let full_cmd = map(extend([get(g:, 'zoxide_executable', 'zoxide')], a:cmd), {_, arg -> shellescape(arg)})
+function! zoxide#exec(cmd, query) abort
+    let full_cmd = [get(g:, 'zoxide_executable', 'zoxide')] + a:cmd + map(copy(a:query), {_, arg -> shellescape(arg)})
     let result = systemlist(join(full_cmd))
     if v:shell_error
         echohl ErrorMsg | echo join(result, "\n") | echohl None
@@ -13,7 +13,7 @@ function! s:change_directory(cd_command, directory) abort
     exe a:cd_command a:directory
     pwd
     if get(g:, 'zoxide_update_score', 1)
-        call zoxide#exec(['add', '.'])
+        call zoxide#exec(['add'], [getcwd()])
     endif
 endfunction
 
@@ -24,7 +24,7 @@ function! zoxide#z(cd_command, ...) abort
         call s:change_directory(a:cd_command, query[0])
         return
     endif
-    let result = zoxide#exec(['query'] + query)[0]
+    let result = zoxide#exec(['query'], query)[0]
     if !v:shell_error | call s:change_directory(a:cd_command, result) | endif
 endfunction
 
@@ -37,7 +37,7 @@ function! zoxide#zi(cd_command, bang, ...) abort
     if !exists('g:loaded_fzf') | echoerr 'The fzf.vim plugin must be installed' | return | endif
 
     call fzf#run(fzf#wrap('zoxide', {
-                \ 'source': zoxide#exec(['query', '--list', '--score'] + a:000),
+                \ 'source': zoxide#exec(['query', '--list', '--score'], a:000),
                 \ 'sink': funcref('s:handle_fzf_result', [a:cd_command]),
                 \ 'options': '--prompt="Zoxide> "',
                 \ }, a:bang))
