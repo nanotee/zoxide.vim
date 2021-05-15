@@ -52,10 +52,9 @@ g:zoxide_update_score
 
 			Default value: `1`
 
-
 					*g:zoxide_legacy_aliases*
 g:zoxide_legacy_aliases
-			Defines aliases `Za` and `Zr`. These were removed from
+			Defines aliases :Za and :Zr. These were removed from
 			the main zoxide package because they were used too
 			infrequently:
 			https://github.com/ajeetdsouza/zoxide/pull/158

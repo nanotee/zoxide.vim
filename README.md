@@ -63,8 +63,8 @@ The plugin defines several commands that wrap the functionality of zoxide:
 
 - `g:zoxide_legacy_aliases` (default value: `0`)
 
-    Defines aliases `Za` and `Zr`.
+    Defines aliases `:Za` and `:Zr`.
     These were removed from the main zoxide package because they were used too infrequently: [ajeetdsouza/zoxide#158](https://github.com/ajeetdsouza/zoxide/pull/158)
-    (They probably don't warrant adding any kind of alias in Vim either because it's really easy to use `!zoxide add {query}`)
+    (They probably don't warrant adding any kind of alias in Vim either because it's really easy to use `:!zoxide add {query}`)
 
     I'm going to remove them in the future.
