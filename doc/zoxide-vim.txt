@@ -1,0 +1,70 @@
+*zoxide-vim.txt*	A small (Neo)Vim wrapper for zoxide
+
+USAGE					*zoxide-vim* *:Z*
+
+:Z {query}		cd to the highest ranked directory matching your
+			query. If {query} is omitted, cd to the home
+			directory.
+
+:Lz {query}		same as :Z but local to the current
+			window.
+
+:Tz {query}		same as :Z but local to the current tab.
+
+:Zi {query}		cd to one of your highest ranking directories using
+			fzf.
+
+:Lzi {query}		same as :Zi, but local to the current
+			window.
+
+:Tzi {query}		same as :Zi, but local to the current
+			tab.
+
+CONFIGURATION				*zoxide-vim-configuration*
+
+					*g:zoxide_executable*
+g:zoxide_executable
+			The name of path of the zoxide executable.
+
+			Default value: `'zoxide'`
+
+					*g:zoxide_prefix*
+g:zoxide_prefix
+			The prefix to use for commands. Example: >
+
+			let g:zoxide_prefix = 'jump'
+<
+			Generates the following commands:
+
+			:Jump
+			:Ljump
+			:Tjump
+			:Jumpi
+			:Ljumpi
+			:Tjumpi
+
+			Default value: `'z'`
+
+					*g:zoxide_update_score*
+g:zoxide_update_score
+			Decides whether the zoxide database should be updated
+			when you cd into a directory.
+
+			Default value: `1`
+
+
+					*g:zoxide_legacy_aliases*
+g:zoxide_legacy_aliases
+			Defines aliases `Za` and `Zr`. These were removed from
+			the main zoxide package because they were used too
+			infrequently:
+			https://github.com/ajeetdsouza/zoxide/pull/158
+			(They probably don't warrant adding any kind of alias
+			in Vim either because it's really easy to use
+			":!zoxide add {query}").
+
+			I'm going to remove them in the future.
+
+			Default value: `0`
+
+vim:tw=78:ts=8:noet:ft=help:norl:
