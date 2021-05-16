@@ -12,7 +12,7 @@ function! s:change_directory(cd_command, directory) abort
 
     exe a:cd_command a:directory
     pwd
-    if get(g:, 'zoxide_update_score', 1)
+    if get(g:, 'zoxide_update_score', 1) && get(g:, 'zoxide_hook', 'none') !=# 'pwd'
         call zoxide#exec(['add'], [getcwd()])
     endif
 endfunction

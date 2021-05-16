@@ -59,7 +59,13 @@ The plugin defines several commands that wrap the functionality of zoxide:
 
 - `g:zoxide_update_score` (default value: `1`)
 
-    Decides whether the zoxide database should be updated when you cd into a directory
+    Decides whether the zoxide database should be updated when you execute a :Z-style command
+
+- `g:zoxide_hook` (default value: `'none'`)
+
+    Automatically increment a directory's score on certain events. Available hooks:
+    - `'none'`: never automatically add directories to zoxide.
+    - `'pwd'`: sets up an autocommand that listens to the `DirChanged` event. **Note**: on Neovim, `'autochdir'` can cause the event to be triggered very often.
 
 - `g:zoxide_legacy_aliases` (default value: `0`)
 

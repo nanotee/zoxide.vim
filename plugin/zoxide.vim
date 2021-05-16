@@ -30,5 +30,19 @@ if get(g:, 'zoxide_legacy_aliases', 0)
     execute 'command! -nargs=? -complete=dir ' .. s:z_cmd_cap .. 'r call zoxide#exec(["remove"], [<q-args>])'
 endif
 
+if get(g:, 'zoxide_hook', 'none') ==# 'pwd'
+    if has('nvim')
+        augroup zoxide_cd
+            autocmd!
+            autocmd DirChanged * if !v:event['changed_window'] | call zoxide#exec(['add'], [v:event['cwd']]) | endif
+        augroup END
+    else
+        augroup zoxide_cd
+            autocmd!
+            autocmd DirChanged window,tabpage,global call zoxide#exec(['add'], [expand('<afile>')])
+        augroup END
+    endif
+endif
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

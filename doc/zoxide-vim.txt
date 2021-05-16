@@ -48,9 +48,21 @@ g:zoxide_prefix
 					*g:zoxide_update_score*
 g:zoxide_update_score
 			Decides whether the zoxide database should be updated
-			when you cd into a directory.
+			when you execute a :Z-style command.
 
 			Default value: `1`
+
+					*g:zoxide_hook*
+g:zoxide_hook
+			Automatically increment a directory's score on certain
+			events. Available hooks:
+			- `'none'`: never automatically add directories to
+			  zoxide.
+			- `'pwd'`: sets up an autocommand that listens to the
+			  |DirChanged| event. Note: on Neovim, 'autochdir' can
+			  cause the event to be triggered very often.
+
+			Default value: `'none'`
 
 					*g:zoxide_legacy_aliases*
 g:zoxide_legacy_aliases
