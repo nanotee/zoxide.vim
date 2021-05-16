@@ -1,19 +1,46 @@
-function! zoxide#exec(cmd, query) abort
-    let full_cmd = [get(g:, 'zoxide_executable', 'zoxide')] + a:cmd + map(copy(a:query), {_, arg -> shellescape(arg)})
-    let result = systemlist(join(full_cmd))
-    if v:shell_error
-        echohl ErrorMsg | echo join(result, "\n") | echohl None
+if has('nvim')
+    function! zoxide#exec(cmd, callback = v:null) abort
+        let full_cmd = [get(g:, 'zoxide_executable', 'zoxide')] + a:cmd
+        let stdout = []
+        let stderr = []
+        call jobstart(full_cmd, {
+                    \ 'on_stdout': {_, data -> extend(stdout, data)},
+                    \ 'on_stderr': {_, data -> extend(stderr, data)},
+                    \ 'on_exit': {_ -> s:handle_job_result(stdout, stderr, a:callback)},
+                    \ })
+    endfunction
+else
+    function! zoxide#exec(cmd, callback = v:null) abort
+        let full_cmd = [get(g:, 'zoxide_executable', 'zoxide')] + a:cmd
+        let stdout = []
+        let stderr = []
+        call job_start(full_cmd, {
+                    \ 'out_cb': {_, msg -> extend(stdout, [msg])},
+                    \ 'err_cb': {_, msg -> extend(stderr, [msg])},
+                    \ 'exit_cb': {_ -> s:handle_job_result(stdout, stderr, a:callback)},
+                    \ })
+    endfunction
+endif
+
+function! s:handle_job_result(stdout, stderr, callback) abort
+    let stdout = filter(a:stdout, '!empty(v:val)')
+    let stderr = filter(a:stderr, '!empty(v:val)')
+    if !empty(stderr)
+        echohl ErrorMsg | echo join(stderr, "\n") | echohl None
+        return
     endif
-    return result
+    if !empty(a:callback)
+        call call(a:callback, [stdout])
+    endif
 endfunction
 
 function! s:change_directory(cd_command, directory) abort
-    if !isdirectory(a:directory) | echoerr 'Not a directory' | return | endif
+    let directory = type(a:directory) == v:t_list ? a:directory[0] : a:directory
 
-    exe a:cd_command a:directory
+    exe a:cd_command directory
     pwd
     if get(g:, 'zoxide_update_score', 1) && get(g:, 'zoxide_hook', 'none') !=# 'pwd'
-        call zoxide#exec(['add'], [getcwd()])
+        call zoxide#exec(['add', getcwd()])
     endif
 endfunction
 
@@ -24,21 +51,16 @@ function! zoxide#z(cd_command, ...) abort
         call s:change_directory(a:cd_command, query[0])
         return
     endif
-    let result = zoxide#exec(['query', '--exclude', shellescape(getcwd())], query)[0]
-    if !v:shell_error | call s:change_directory(a:cd_command, result) | endif
-endfunction
-
-function! s:handle_fzf_result(cd_command, result) abort
-    let directory = substitute(a:result, '^\s*\d*\s*', '', '')
-    call s:change_directory(a:cd_command, directory)
+    call zoxide#exec(['query', '--exclude', getcwd()] + query, funcref('s:change_directory', [a:cd_command]))
 endfunction
 
 function! zoxide#zi(cd_command, bang, ...) abort
     if !exists('g:loaded_fzf') | echoerr 'The fzf.vim plugin must be installed' | return | endif
 
-    call fzf#run(fzf#wrap('zoxide', {
-                \ 'source': zoxide#exec(['query', '--list', '--score'], a:000),
-                \ 'sink': funcref('s:handle_fzf_result', [a:cd_command]),
-                \ 'options': '--prompt="Zoxide> "',
-                \ }, a:bang))
+    call zoxide#exec(['query', '--list', '--score'] + a:000,
+                \ {exec_results -> fzf#run(fzf#wrap('zoxide', {
+                    \ 'source': exec_results,
+                    \ 'sink': {result -> s:change_directory(a:cd_command, substitute(result, '^\s*\d*\s*', '', ''))},
+                    \ 'options': '--prompt="Zoxide> "',
+                    \ }, a:bang))})
 endfunction
