@@ -24,7 +24,7 @@ function! zoxide#z(cd_command, ...) abort
         call s:change_directory(a:cd_command, query[0])
         return
     endif
-    let result = zoxide#exec(['query'], query)[0]
+    let result = zoxide#exec(['query', '--exclude', shellescape(getcwd())], query)[0]
     if !v:shell_error | call s:change_directory(a:cd_command, result) | endif
 endfunction
 
