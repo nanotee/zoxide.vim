@@ -8,10 +8,15 @@ function! zoxide#exec(cmd, query) abort
 endfunction
 
 function! s:change_directory(cd_command, directory) abort
-    if !isdirectory(a:directory) | echoerr 'Not a directory' | return | endif
+    try
+        exe a:cd_command a:directory
+    catch
+        echohl ErrorMsg | echomsg v:exception | echohl None
+        return
+    endtry
 
-    exe a:cd_command a:directory
     pwd
+
     if get(g:, 'zoxide_update_score', 1) && get(g:, 'zoxide_hook', 'none') !=# 'pwd'
         call zoxide#exec(['add'], [getcwd()])
     endif
@@ -20,7 +25,7 @@ endfunction
 function! zoxide#z(cd_command, ...) abort
     let query = empty(a:000) ? [$HOME] : a:000
 
-    if len(query) == 1 && isdirectory(query[0])
+    if len(query) == 1 && (query[0] ==# '-' || isdirectory(query[0]))
         call s:change_directory(a:cd_command, query[0])
         return
     endif
