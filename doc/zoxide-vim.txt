@@ -65,18 +65,4 @@ g:zoxide_hook
 
 			Default value: `'none'`
 
-					*g:zoxide_legacy_aliases*
-g:zoxide_legacy_aliases
-			Defines aliases :Za and :Zr. These were removed from
-			the main zoxide package because they were used too
-			infrequently:
-			https://github.com/ajeetdsouza/zoxide/pull/158
-			(They probably don't warrant adding any kind of alias
-			in Vim either because it's really easy to use
-			":!zoxide add {query}").
-
-			I'm going to remove them in the future.
-
-			Default value: `0`
-
 vim:tw=78:ts=8:noet:ft=help:norl:

@@ -66,11 +66,3 @@ The plugin defines several commands that wrap the functionality of zoxide:
     Automatically increment a directory's score on certain events. Available hooks:
     - `'none'`: never automatically add directories to zoxide.
     - `'pwd'`: sets up an autocommand that listens to the `DirChanged` event. **Note**: on Neovim < `0.6.0`, `'autochdir'` can cause the event to be triggered very often.
-
-- `g:zoxide_legacy_aliases` (default value: `0`)
-
-    Defines aliases `:Za` and `:Zr`.
-    These were removed from the main zoxide package because they were used too infrequently: [ajeetdsouza/zoxide#158](https://github.com/ajeetdsouza/zoxide/pull/158)
-    (They probably don't warrant adding any kind of alias in Vim either because it's really easy to use `:!zoxide add {query}`)
-
-    I'm going to remove them in the future.
