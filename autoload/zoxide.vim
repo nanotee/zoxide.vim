@@ -1,6 +1,9 @@
+function! s:build_cmd(cmd, query) abort
+    return join([get(g:, 'zoxide_executable', 'zoxide')] + a:cmd + map(copy(a:query), 'shellescape(v:val)'), ' ')
+endfunction
+
 function! zoxide#exec(cmd, query) abort
-    let full_cmd = [get(g:, 'zoxide_executable', 'zoxide')] + a:cmd + map(copy(a:query), {_, arg -> shellescape(arg)})
-    let result = systemlist(join(full_cmd))
+    let result = systemlist(s:build_cmd(a:cmd, a:query))
     if v:shell_error
         echohl ErrorMsg | echo join(result, "\n") | echohl None
     endif
@@ -50,7 +53,7 @@ else
         if !exists('g:loaded_fzf') | echoerr 'The fzf.vim plugin must be installed' | return | endif
 
         call fzf#run(fzf#wrap('zoxide', {
-                    \ 'source': zoxide#exec(['query', '--list', '--score'], a:000),
+                    \ 'source': s:build_cmd(['query', '--list', '--score'], a:000),
                     \ 'sink': funcref('zoxide#handle_select_result', [a:cd_command]),
                     \ 'options': '--prompt="Zoxide> "',
                     \ }, a:bang))
