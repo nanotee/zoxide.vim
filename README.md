@@ -66,3 +66,8 @@ The plugin defines several commands that wrap the functionality of zoxide:
     Automatically increment a directory's score on certain events. Available hooks:
     - `'none'`: never automatically add directories to zoxide.
     - `'pwd'`: sets up an autocommand that listens to the `DirChanged` event. **Note**: on Neovim < `0.6.0`, `'autochdir'` can cause the event to be triggered very often.
+
+- `g:zoxide_use_select` (default value: `0`)
+
+    Use `vim.ui.select()` for :Zi-style commands
+    (Neovim `0.6.0+` only)

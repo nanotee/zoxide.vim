@@ -65,4 +65,11 @@ g:zoxide_hook
 
 			Default value: `'none'`
 
+					*g:zoxide_use_select*
+g:zoxide_use_select
+			Use |vim.ui.select()| for :Zi-style commands
+			(Neovim `0.6.0+` only)
+
+			Default value: `0`
+
 vim:tw=78:ts=8:noet:ft=help:norl:

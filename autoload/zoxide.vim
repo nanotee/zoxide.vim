@@ -33,17 +33,26 @@ function! zoxide#z(cd_command, ...) abort
     if !v:shell_error | call s:change_directory(a:cd_command, result) | endif
 endfunction
 
-function! s:handle_fzf_result(cd_command, result) abort
+function! zoxide#handle_select_result(cd_command, result) abort
     let directory = substitute(a:result, '^\s*\d*\s*', '', '')
     call s:change_directory(a:cd_command, directory)
 endfunction
 
-function! zoxide#zi(cd_command, bang, ...) abort
-    if !exists('g:loaded_fzf') | echoerr 'The fzf.vim plugin must be installed' | return | endif
+if has('nvim') && get(g:, 'zoxide_use_select', 0)
+    function! zoxide#zi(cd_command, bang, ...) abort
+        call luaeval('require("zoxide-vim").select(_A[1], _A[2])', [
+                    \ zoxide#exec(['query', '--list', '--score'], a:000),
+                    \ a:cd_command,
+                    \ ])
+    endfunction
+else
+    function! zoxide#zi(cd_command, bang, ...) abort
+        if !exists('g:loaded_fzf') | echoerr 'The fzf.vim plugin must be installed' | return | endif
 
-    call fzf#run(fzf#wrap('zoxide', {
-                \ 'source': zoxide#exec(['query', '--list', '--score'], a:000),
-                \ 'sink': funcref('s:handle_fzf_result', [a:cd_command]),
-                \ 'options': '--prompt="Zoxide> "',
-                \ }, a:bang))
-endfunction
+        call fzf#run(fzf#wrap('zoxide', {
+                    \ 'source': zoxide#exec(['query', '--list', '--score'], a:000),
+                    \ 'sink': funcref('zoxide#handle_select_result', [a:cd_command]),
+                    \ 'options': '--prompt="Zoxide> "',
+                    \ }, a:bang))
+    endfunction
+endif
