@@ -1,24 +1,26 @@
 *zoxide-vim.txt*	A small (Neo)Vim wrapper for zoxide
 
-USAGE					*zoxide-vim* *:Z*
+USAGE					*zoxide-vim* *zoxide-vim-usage*
 
-:Z {query}		cd to the highest ranked directory matching your
-			query. If {query} is omitted, cd to the home
-			directory.
+							*:Z*
+:Z {query}		cd to the highest ranked directory matching your query.
+			If {query} is omitted, cd to the home directory.
 
-:Lz {query}		same as :Z but local to the current
-			window.
+							*:Lz*
+:Lz {query}		same as :Z but local to the current window.
 
+							*:Tz*
 :Tz {query}		same as :Z but local to the current tab.
 
+							*:Zi*
 :Zi {query}		cd to one of your highest ranking directories using
 			fzf.
 
-:Lzi {query}		same as :Zi, but local to the current
-			window.
+							*:Lzi*
+:Lzi {query}		same as :Zi, but local to the current window.
 
-:Tzi {query}		same as :Zi, but local to the current
-			tab.
+							*:Tzi*
+:Tzi {query}		same as :Zi, but local to the current tab.
 
 CONFIGURATION				*zoxide-vim-configuration*
 
@@ -67,8 +69,8 @@ g:zoxide_hook
 
 					*g:zoxide_use_select*
 g:zoxide_use_select
-			Use |vim.ui.select()| for :Zi-style commands
-			(Neovim `0.6.0+` only)
+			Use |vim.ui.select()| for :Zi-style commands (Neovim
+			`0.6.0+` only)
 
 			Default value: `0`
 
