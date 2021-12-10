@@ -1,5 +1,6 @@
 *zoxide-vim.txt*	A small (Neo)Vim wrapper for zoxide
 
+===============================================================================
 USAGE					*zoxide-vim* *zoxide-vim-usage*
 
 							*:Z*
@@ -22,6 +23,7 @@ USAGE					*zoxide-vim* *zoxide-vim-usage*
 							*:Tzi*
 :Tzi {query}		same as :Zi, but local to the current tab.
 
+===============================================================================
 CONFIGURATION				*zoxide-vim-configuration*
 
 					*g:zoxide_executable*
