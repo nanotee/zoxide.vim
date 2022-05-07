@@ -12,20 +12,26 @@ A small (Neo)Vim wrapper for [zoxide](https://github.com/ajeetdsouza/zoxide)
 
 Install using your favorite plugin manager:
 
-```vim
-" vim-plug
-Plug 'nanotee/zoxide.vim'
-
-" dein.vim
-call dein#add('nanotee/zoxide.vim')
-
-" vim-packager
-call packager#add('nanotee/zoxide.vim')
-```
+- [vim-plug](https://github.com/junegunn/vim-plug)
+    ```vim
+    Plug 'nanotee/zoxide.vim'
+    ```
+- [packer.nvim](https://github.com/wbthomason/packer.nvim)
+    ```lua
+    use 'nanotee/zoxide.vim'
+    ```
+- [dein.vim](https://github.com/Shougo/dein.vim)
+    ```vim
+    call dein#add('nanotee/zoxide.vim')
+    ```
+- [vim-packager](https://github.com/kristijanhusak/vim-packager)
+    ```vim
+    call packager#add('nanotee/zoxide.vim')
+    ```
 
 ## Usage
 
-The plugin defines several commands that wrap the functionality of zoxide:
+The plugin defines commands that wrap the functionality of zoxide:
 
 - `:Z {query}`: cd to the highest ranked directory matching your query. If `{query}` is omitted, cd to the home directory
 - `:Lz {query}`: same as `:Z`, but local to the current window
