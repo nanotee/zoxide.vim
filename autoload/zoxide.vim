@@ -1,5 +1,5 @@
 function! s:build_cmd(cmd, query) abort
-    return join([get(g:, 'zoxide_executable', 'zoxide')] + a:cmd + map(copy(a:query), 'shellescape(v:val)'), ' ')
+    return join([get(g:, 'zoxide_executable', 'zoxide')] + map(a:cmd + a:query, 'shellescape(v:val)'), ' ')
 endfunction
 
 function! zoxide#exec(cmd, query) abort
@@ -32,7 +32,7 @@ function! zoxide#z(cd_command, ...) abort
         call s:change_directory(a:cd_command, query[0])
         return
     endif
-    let result = zoxide#exec(['query', '--exclude', shellescape(getcwd())], query)[0]
+    let result = zoxide#exec(['query', '--exclude', getcwd()], query)[0]
     if !v:shell_error | call s:change_directory(a:cd_command, result) | endif
 endfunction
 
