@@ -28,7 +28,7 @@ CONFIGURATION				*zoxide-vim-configuration*
 
 					*g:zoxide_executable*
 g:zoxide_executable
-			The name of path of the zoxide executable.
+			The name or path of the zoxide executable.
 
 			Default value: `'zoxide'`
 
