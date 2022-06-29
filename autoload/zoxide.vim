@@ -50,13 +50,14 @@ if has('nvim') && get(g:, 'zoxide_use_select', 0)
                     \ ])
     endfunction
 else
+    let s:default_fzf_options = ['--prompt=Zoxide> ']
     function! zoxide#zi(cd_command, bang, ...) abort
         if !exists('g:loaded_fzf') | echoerr 'The fzf.vim plugin must be installed' | return | endif
 
         call fzf#run(fzf#wrap('zoxide', {
                     \ 'source': s:build_cmd(['query', '--list', '--score'], a:000),
                     \ 'sink': funcref('zoxide#handle_select_result', [a:cd_command]),
-                    \ 'options': '--prompt="Zoxide> "',
+                    \ 'options': get(g:, 'zoxide_fzf_options', s:default_fzf_options),
                     \ }, a:bang))
     endfunction
 endif
