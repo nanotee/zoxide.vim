@@ -50,7 +50,18 @@ if has('nvim') && get(g:, 'zoxide_use_select', 0)
                     \ ])
     endfunction
 else
-    let s:default_fzf_options = ['--prompt=Zoxide> ']
+    let s:default_fzf_options = [
+                \ '--prompt=Zoxide> ',
+                \ '--no-sort',
+                \ '--keep-right',
+                \ '--info=inline',
+                \ '--layout=reverse',
+                \ '--select-1',
+                \ ]
+    if has('unix')
+        let s:default_fzf_options += ['--preview=\command -p ls -p {2..}', '--preview-window=down']
+    endif
+
     function! zoxide#zi(cd_command, bang, ...) abort
         if !exists('g:loaded_fzf') | echoerr 'The fzf.vim plugin must be installed' | return | endif
 
