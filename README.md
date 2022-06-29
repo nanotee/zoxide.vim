@@ -42,38 +42,4 @@ The plugin defines commands that wrap the functionality of zoxide:
 
 ## Configuration
 
-- `g:zoxide_executable` (default value: `'zoxide'`):
-
-    The name or path of the zoxide executable
-
-- `g:zoxide_prefix` (default value: `'z'`)
-
-    The prefix to use for commands. Example:
-    ```vim
-    let g:zoxide_prefix = 'jump'
-    ```
-
-    Generates the following commands:
-    ```
-    :Jump
-    :Ljump
-    :Tjump
-    :Jumpi
-    :Ljumpi
-    :Tjumpi
-    ```
-
-- `g:zoxide_update_score` (default value: `1`)
-
-    Decides whether the zoxide database should be updated when you execute a :Z-style command
-
-- `g:zoxide_hook` (default value: `'none'`)
-
-    Automatically increment a directory's score on certain events. Available hooks:
-    - `'none'`: never automatically add directories to zoxide.
-    - `'pwd'`: sets up an autocommand that listens to the `DirChanged` event. **Note**: on Neovim < `0.6.0`, `'autochdir'` can cause the event to be triggered very often.
-
-- `g:zoxide_use_select` (default value: `0`)
-
-    Use `vim.ui.select()` for :Zi-style commands
-    (Neovim `0.6.0+` only)
+See [zoxide-vim-configuration](doc/zoxide-vim.txt#L27)
