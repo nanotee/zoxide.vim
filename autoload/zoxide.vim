@@ -38,7 +38,7 @@ endfunction
 
 function! zoxide#handle_select_result(cd_command, result) abort
     if empty(a:result) | return | endif
-    let directory = substitute(a:result, '^\s*\d*\s*', '', '')
+    let directory = substitute(a:result, '^\s*[0-9.]*\s*', '', '')
     call s:change_directory(a:cd_command, directory)
 endfunction
 
