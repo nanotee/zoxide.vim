@@ -18,6 +18,14 @@ function! s:change_directory(cd_command, directory) abort
         return
     endtry
 
+    if get(g:, 'zoxide_opendir', 0)
+      let is_dir_buffer = bufname() =~ '^/.*/$'
+      let is_empty_buffer = empty(bufname()) && getline(1, '$') == ['']
+      if is_dir_buffer || is_empty_buffer
+        edit .
+      endif
+    endif
+
     pwd
 
     if get(g:, 'zoxide_update_score', 1) && get(g:, 'zoxide_hook', 'none') !=# 'pwd'
