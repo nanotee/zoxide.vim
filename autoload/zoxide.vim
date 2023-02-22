@@ -18,6 +18,8 @@ function! s:change_directory(cd_command, directory) abort
         return
     endtry
 
+    doautocmd User ZoxideDirChanged
+
     pwd
 
     if get(g:, 'zoxide_update_score', 1) && get(g:, 'zoxide_hook', 'none') !=# 'pwd'

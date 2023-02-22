@@ -43,3 +43,7 @@ The plugin defines commands that wrap the functionality of zoxide:
 ## Configuration
 
 See [zoxide-vim-configuration](doc/zoxide-vim.txt#L27)
+
+## Events
+
+See [zoxide-vim-events](doc/zoxide-vim.txt#L92)
