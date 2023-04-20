@@ -18,7 +18,9 @@ function! s:change_directory(cd_command, directory) abort
         return
     endtry
 
-    doautocmd User ZoxideDirChanged
+    if exists('#User#ZoxideDirChanged')
+        doautocmd User ZoxideDirChanged
+    endif
 
     pwd
 
