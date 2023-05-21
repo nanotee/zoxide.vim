@@ -12,7 +12,7 @@ endfunction
 
 function! s:change_directory(cd_command, directory) abort
     try
-        exe a:cd_command a:directory
+        exe a:cd_command fnameescape(fnamemodify(a:directory, ':p'))
     catch
         echohl ErrorMsg | echomsg v:exception | echohl None
         return
