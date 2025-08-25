@@ -63,14 +63,22 @@ else
                 \ '--select-1',
                 \ ]
     " Previews are only supported on UNIX.
-    " '--with-shell' Ensures that the preview command is run in a
-    " POSIX-compliant shell.
     if has('unix')
+        " Non-POSIX args are only available on certain operating systems.
         let s:default_fzf_options += [
-                    \ '--preview=\command -p ls -p {2..}',
-                    \ '--preview-window=down',
-                    \ '--with-shell=sh -c',
+                    \ has('linux') ?
+                    \ '--preview=\command -p ls -Cp --color=always --group-directories-first {2..}' :
+                    \ '--preview=\command -p ls -Cp {2..}',
                     \ ]
+
+        " Rounded edges don't display correctly on some terminals.
+        let s:default_fzf_options += ['--preview-window=down,30%,sharp']
+        " `CLICOLOR=1` Enables colorized `ls` output on macOS / FreeBSD.
+        " `FORCE_CLICOLOR=1` Forces colorized `ls` output when the output is
+        " not a TTY (like in fzf's preview window) on macOS / FreeBSD.
+        " `sh -c` Ensures that the preview command is run in a POSIX-compliant
+        " shell, regardless of what shell the user has selected.
+        let s:default_fzf_options += ['--with-shell=env CLICOLOR=1 CLICOLOR_FORCE=1 sh -c']
     endif
 
     function! zoxide#zi(cd_command, bang, ...) abort
