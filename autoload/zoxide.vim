@@ -46,7 +46,7 @@ function! zoxide#handle_select_result(cd_command, result) abort
     call s:change_directory(a:cd_command, directory)
 endfunction
 
-if has('nvim') && get(g:, 'zoxide_use_select', 0)
+if has('nvim') && (!exists('g:loaded_fzf') || get(g:, 'zoxide_use_select', 0))
     function! zoxide#zi(cd_command, bang, ...) abort
         call luaeval('require("zoxide-vim").select(_A[1], _A[2])', [
                     \ zoxide#exec(['query', '--list', '--score'], a:000),
