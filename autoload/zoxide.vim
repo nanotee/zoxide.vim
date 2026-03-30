@@ -10,13 +10,29 @@ function! zoxide#exec(cmd, query) abort
     return result
 endfunction
 
-function! s:change_directory(cd_command, directory) abort
+function! s:chdir_legacy(cd_command, directory) abort
     try
         exe a:cd_command fnameescape(fnamemodify(a:directory, ':p'))
     catch
         echohl ErrorMsg | echomsg v:exception | echohl None
         return
     endtry
+endfunction
+
+function! s:chdir_new(cd_command, directory) abort
+    let scope = a:cd_command is# 'tcd' ? 'tabpage' : a:cd_command is# 'lcd' ? 'window' : 'global'
+    call chdir(a:directory, scope)
+endfunction
+
+" Replace with raw chdir call eventually
+let s:chdir = funcref(has('patch-9.1.1605') ? 's:chdir_new' : 's:chdir_legacy')
+
+function! s:change_directory(cd_command, directory) abort
+    if empty(a:directory)
+        return
+    endif
+
+    call s:chdir(a:cd_command, a:directory)
 
     if exists('#User#ZoxideDirChanged')
         doautocmd User ZoxideDirChanged
