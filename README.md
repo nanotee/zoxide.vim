@@ -12,21 +12,13 @@ A small (Neo)Vim wrapper for [zoxide](https://github.com/ajeetdsouza/zoxide)
 
 Install using your favorite plugin manager:
 
+- [Native vim.pack in Neovim](https://neovim.io/doc/user/pack/#vim.pack)
+    ```lua
+    vim.pack.add({'https://github.com/nanotee/zoxide.vim'})
+    ```
 - [vim-plug](https://github.com/junegunn/vim-plug)
     ```vim
     Plug 'nanotee/zoxide.vim'
-    ```
-- [packer.nvim](https://github.com/wbthomason/packer.nvim)
-    ```lua
-    use 'nanotee/zoxide.vim'
-    ```
-- [dein.vim](https://github.com/Shougo/dein.vim)
-    ```vim
-    call dein#add('nanotee/zoxide.vim')
-    ```
-- [vim-packager](https://github.com/kristijanhusak/vim-packager)
-    ```vim
-    call packager#add('nanotee/zoxide.vim')
     ```
 
 ## Usage
