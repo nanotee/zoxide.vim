@@ -12,16 +12,24 @@ let s:z_cmd_cap = toupper(s:z_cmd[0]) .. strcharpart(s:z_cmd, 1)
 " Z
 " Lz
 " Tz
+" Bz
 execute 'command! -nargs=* -complete=dir ' .. s:z_cmd_cap .. ' call zoxide#z("cd", <f-args>)'
 execute 'command! -nargs=* -complete=dir L' .. s:z_cmd .. ' call zoxide#z("lcd", <f-args>)'
 execute 'command! -nargs=* -complete=dir T' .. s:z_cmd .. ' call zoxide#z("tcd", <f-args>)'
+if exists(':bcd')
+    execute 'command! -nargs=* -complete=dir B' .. s:z_cmd .. ' call zoxide#z("bcd", <f-args>)'
+endif
 
 " Zi
 " Lzi
 " Tzi
+" Bzi
 execute 'command! -nargs=* -bang ' .. s:z_cmd_cap .. 'i call zoxide#zi("cd", <bang>0, <f-args>)'
 execute 'command! -nargs=* -bang L' .. s:z_cmd .. 'i call zoxide#zi("lcd", <bang>0, <f-args>)'
 execute 'command! -nargs=* -bang T' .. s:z_cmd .. 'i call zoxide#zi("tcd", <bang>0, <f-args>)'
+if exists(':bcd')
+    execute 'command! -nargs=* -bang B' .. s:z_cmd .. 'i call zoxide#zi("bcd", <bang>0, <f-args>)'
+endif
 
 if get(g:, 'zoxide_hook', 'none') ==# 'pwd'
     if has('nvim')

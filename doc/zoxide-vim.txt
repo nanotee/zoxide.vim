@@ -13,6 +13,10 @@ USAGE					*zoxide-vim* *zoxide-vim-usage*
 							*:Tz*
 :Tz {query}		same as :Z but local to the current tab.
 
+							*:Bz*
+:Bz {query}		same as :Z but local to the current buffer.
+			(Neovim 0.13+ only)
+
 							*:Zi*
 :Zi {query}		cd to one of your highest ranking directories using
 			fzf.
@@ -22,6 +26,10 @@ USAGE					*zoxide-vim* *zoxide-vim-usage*
 
 							*:Tzi*
 :Tzi {query}		same as :Zi, but local to the current tab.
+
+							*:Tzi*
+:Bzi {query}		same as :Zi, but local to the current buffer.
+			(Neovim 0.13+ only)
 
 ===============================================================================
 CONFIGURATION				*zoxide-vim-configuration*

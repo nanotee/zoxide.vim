@@ -20,7 +20,7 @@ function! s:chdir_legacy(cd_command, directory) abort
 endfunction
 
 function! s:chdir_new(cd_command, directory) abort
-    let scope = a:cd_command is# 'tcd' ? 'tabpage' : a:cd_command is# 'lcd' ? 'window' : 'global'
+    let scope = a:cd_command is# 'tcd' ? 'tabpage' : a:cd_command is# 'lcd' ? 'window' : a:cd_command is# 'bcd' ? 'buffer' : 'global'
     call chdir(a:directory, scope)
 endfunction
 
