@@ -72,11 +72,14 @@ if has('nvim') && (!exists('g:loaded_fzf') || get(g:, 'zoxide_use_select', 0))
 else
     let s:default_fzf_options = [
                 \ '--prompt=Zoxide> ',
+                \ '--exact',
                 \ '--no-sort',
+                \ '--bind=btab:up,tab:down',
+                \ '--cycle',
                 \ '--keep-right',
                 \ '--info=inline',
                 \ '--layout=reverse',
-                \ '--select-1',
+                \ '--tabstop=1',
                 \ ]
     " Previews are only supported on UNIX.
     if has('unix')
