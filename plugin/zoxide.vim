@@ -35,7 +35,7 @@ if get(g:, 'zoxide_hook', 'none') ==# 'pwd'
     if has('nvim')
         augroup zoxide_cd
             autocmd!
-            autocmd DirChanged window,tab,tabpage,global if !v:event['changed_window'] | call zoxide#exec(['add'], [v:event['cwd']]) | endif
+            autocmd DirChanged buffer,window,tab,tabpage,global if !v:event['changed_window'] | call zoxide#exec(['add'], [v:event['cwd']]) | endif
         augroup END
     else
         augroup zoxide_cd
