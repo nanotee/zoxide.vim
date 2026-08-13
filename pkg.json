@@ -1,0 +1,8 @@
+{
+    "name": "zoxide.vim",
+    "description": "A small (Neo)Vim wrapper for zoxide",
+    "engines": {
+        "nvim": ">=0.10.0",
+        "vim": ">=8.2.1969"
+    }
+}
