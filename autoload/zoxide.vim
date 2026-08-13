@@ -101,11 +101,11 @@ function! s:fzf_no_match_found(exit_code) abort
 endfunction
 
 function! s:zoxide_zi_fzf(cd_command, bang, query) abort
-    call fzf#run(fzf#wrap('zoxide', {
-                \ 'source': s:build_cmd(['query', '--list', '--score'], a:query),
-                \ 'sink': funcref('zoxide#handle_select_result', [a:cd_command]),
-                \ 'options': g:->get('zoxide_fzf_options', s:default_fzf_options) + ['--exit-0'],
-                \ 'exit': funcref('s:fzf_no_match_found'),
+    call fzf#run(fzf#wrap('zoxide', #{
+                \ source: s:build_cmd(['query', '--list', '--score'], a:query),
+                \ sink: funcref('zoxide#handle_select_result', [a:cd_command]),
+                \ options: g:->get('zoxide_fzf_options', s:default_fzf_options) + ['--exit-0'],
+                \ exit: funcref('s:fzf_no_match_found'),
                 \ }, a:bang))
 endfunction
 
