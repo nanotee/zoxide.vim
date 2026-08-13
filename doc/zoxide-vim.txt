@@ -77,8 +77,8 @@ g:zoxide_hook
 
 					*g:zoxide_use_select*
 g:zoxide_use_select
-			Use |vim.ui.select()| for :Zi-style commands (Neovim
-			only)
+			Use |vim.ui.select()| for :Zi-style commands. Falls
+			back to |inputlist()| when not available.
 
 			Default value: `0`
 

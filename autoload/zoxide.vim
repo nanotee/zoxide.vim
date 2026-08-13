@@ -107,16 +107,23 @@ function! s:zoxide_zi_nvim_ui_select(cd_command, bang, query) abort
                 \ ])
 endfunction
 
-function! s:zoxide_zi_noop(...) abort
-    echohl ErrorMsg | echomsg 'No picker available' | echohl None
+function! s:zoxide_zi_inputlist(cd_command, bang, query) abort
+    let items = zoxide#exec(
+                \ ['query', '--list', '--score'],
+                \ a:query
+                \ )
+    let numbered_items = mapnew(items, {key, val -> key + 1 .. '. ' .. val})
+    let choice_index = inputlist(['Zoxide> '] + numbered_items)
+
+    if !empty(choice_index)
+        call zoxide#handle_select_result(a:cd_command, items[choice_index - 1])
+    endif
 endfunction
 
-if get(g:, 'zoxide_use_select', 0) && has('nvim')
-    let s:zoxide_zi = funcref('s:zoxide_zi_nvim_ui_select')
-elseif get(g:, 'loaded_fzf', 0)
-    let s:zoxide_zi = funcref('s:zoxide_zi_fzf')
+if get(g:, 'zoxide_use_select', 0) || !get(g:, 'loaded_fzf', 0)
+    let s:zoxide_zi = funcref(has('nvim') ? 's:zoxide_zi_nvim_ui_select' : 's:zoxide_zi_inputlist')
 else
-    let s:zoxide_zi = funcref(has('nvim') ? 's:zoxide_zi_nvim_ui_select' : 's:zoxide_zi_noop')
+    let s:zoxide_zi = funcref('s:zoxide_zi_fzf')
 endif
 
 function! zoxide#zi(cd_command, bang, ...) abort
