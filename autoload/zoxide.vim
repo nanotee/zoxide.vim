@@ -1,18 +1,18 @@
 function! s:build_cmd(cmd, query) abort
-    return join([get(g:, 'zoxide_executable', 'zoxide')] + map(a:cmd + a:query, 'shellescape(v:val)'), ' ')
+    return ([g:->get('zoxide_executable', 'zoxide')] + (a:cmd + a:query)->mapnew('shellescape(v:val)'))->join(' ')
 endfunction
 
 function! zoxide#exec(cmd, query) abort
     let result = systemlist(s:build_cmd(a:cmd, a:query))
     if v:shell_error
-        echohl ErrorMsg | echo join(result, "\n") | echohl None
+        echohl ErrorMsg | echo result->join("\n") | echohl None
     endif
     return result
 endfunction
 
 function! s:chdir_legacy(cd_command, directory) abort
     try
-        exe a:cd_command fnameescape(fnamemodify(a:directory, ':p'))
+        exe a:cd_command a:directory->fnamemodify(':p')->fnameescape()
     catch
         echohl ErrorMsg | echomsg v:exception | echohl None
         return
@@ -40,7 +40,7 @@ function! s:change_directory(cd_command, directory) abort
 
     pwd
 
-    if get(g:, 'zoxide_update_score', 1) && get(g:, 'zoxide_hook', 'none') !=# 'pwd'
+    if g:->get('zoxide_update_score', 1) && g:->get('zoxide_hook', 'none') !=# 'pwd'
         call zoxide#exec(['add'], [getcwd()])
     endif
 endfunction
@@ -58,7 +58,7 @@ endfunction
 
 function! zoxide#handle_select_result(cd_command, result) abort
     if empty(a:result) | return | endif
-    let directory = substitute(a:result, '^\s*[0-9.]*\s*', '', '')
+    let directory = a:result->substitute('^\s*[0-9.]*\s*', '', '')
     call s:change_directory(a:cd_command, directory)
 endfunction
 
@@ -96,7 +96,7 @@ function! s:zoxide_zi_fzf(cd_command, bang, query) abort
     call fzf#run(fzf#wrap('zoxide', {
                 \ 'source': s:build_cmd(['query', '--list', '--score'], a:query),
                 \ 'sink': funcref('zoxide#handle_select_result', [a:cd_command]),
-                \ 'options': get(g:, 'zoxide_fzf_options', s:default_fzf_options),
+                \ 'options': g:->get('zoxide_fzf_options', s:default_fzf_options),
                 \ }, a:bang))
 endfunction
 
@@ -112,7 +112,7 @@ function! s:zoxide_zi_inputlist(cd_command, bang, query) abort
                 \ ['query', '--list', '--score'],
                 \ a:query
                 \ )
-    let numbered_items = mapnew(items, {key, val -> key + 1 .. '. ' .. val})
+    let numbered_items = items->mapnew({key, val -> key + 1 .. '. ' .. val})
     let choice_index = inputlist(['Zoxide> '] + numbered_items)
 
     if !empty(choice_index)
@@ -120,7 +120,7 @@ function! s:zoxide_zi_inputlist(cd_command, bang, query) abort
     endif
 endfunction
 
-if get(g:, 'zoxide_use_select', 0) || !get(g:, 'loaded_fzf', 0)
+if g:->get('zoxide_use_select', 0) || !g:->get('loaded_fzf', 0)
     let s:zoxide_zi = funcref(has('nvim') ? 's:zoxide_zi_nvim_ui_select' : 's:zoxide_zi_inputlist')
 else
     let s:zoxide_zi = funcref('s:zoxide_zi_fzf')

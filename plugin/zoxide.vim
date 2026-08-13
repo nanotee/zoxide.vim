@@ -6,14 +6,14 @@ let g:loaded_zoxide = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:z_cmd = substitute(get(g:, 'zoxide_prefix', 'z'), '\A', '', 'g')
-let s:z_cmd_cap = toupper(s:z_cmd[0]) .. strcharpart(s:z_cmd, 1)
+let s:z_cmd = g:->get('zoxide_prefix', 'z')->substitute('\A', '', 'g')
+let s:z_cmd_upper = s:z_cmd[0]->toupper() .. s:z_cmd->strcharpart(1)
 
 " Z
 " Lz
 " Tz
 " Bz
-execute 'command! -nargs=* -complete=dir ' .. s:z_cmd_cap .. ' call zoxide#z("cd", <f-args>)'
+execute 'command! -nargs=* -complete=dir ' .. s:z_cmd_upper .. ' call zoxide#z("cd", <f-args>)'
 execute 'command! -nargs=* -complete=dir L' .. s:z_cmd .. ' call zoxide#z("lcd", <f-args>)'
 execute 'command! -nargs=* -complete=dir T' .. s:z_cmd .. ' call zoxide#z("tcd", <f-args>)'
 if exists(':bcd')
@@ -24,14 +24,14 @@ endif
 " Lzi
 " Tzi
 " Bzi
-execute 'command! -nargs=* -bang ' .. s:z_cmd_cap .. 'i call zoxide#zi("cd", <bang>0, <f-args>)'
+execute 'command! -nargs=* -bang ' .. s:z_cmd_upper .. 'i call zoxide#zi("cd", <bang>0, <f-args>)'
 execute 'command! -nargs=* -bang L' .. s:z_cmd .. 'i call zoxide#zi("lcd", <bang>0, <f-args>)'
 execute 'command! -nargs=* -bang T' .. s:z_cmd .. 'i call zoxide#zi("tcd", <bang>0, <f-args>)'
 if exists(':bcd')
     execute 'command! -nargs=* -bang B' .. s:z_cmd .. 'i call zoxide#zi("bcd", <bang>0, <f-args>)'
 endif
 
-if get(g:, 'zoxide_hook', 'none') ==# 'pwd'
+if g:->get('zoxide_hook', 'none') ==# 'pwd'
     if has('nvim')
         augroup zoxide_cd
             autocmd!
