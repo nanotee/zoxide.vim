@@ -92,17 +92,34 @@ if has('unix')
     let s:default_fzf_options += ['--with-shell=env CLICOLOR=1 CLICOLOR_FORCE=1 sh -c']
 endif
 
+const s:fzf_exit_no_match = 1
+
+function! s:fzf_no_match_found(exit_code) abort
+    if a:exit_code ==# s:fzf_exit_no_match
+        echohl ErrorMsg | echomsg 'zoxide: no match found' | echohl None
+    endif
+endfunction
+
 function! s:zoxide_zi_fzf(cd_command, bang, query) abort
     call fzf#run(fzf#wrap('zoxide', {
                 \ 'source': s:build_cmd(['query', '--list', '--score'], a:query),
                 \ 'sink': funcref('zoxide#handle_select_result', [a:cd_command]),
-                \ 'options': g:->get('zoxide_fzf_options', s:default_fzf_options),
+                \ 'options': g:->get('zoxide_fzf_options', s:default_fzf_options) + ['--exit-0'],
+                \ 'exit': funcref('s:fzf_no_match_found'),
                 \ }, a:bang))
 endfunction
 
 function! s:zoxide_zi_nvim_ui_select(cd_command, bang, query) abort
+    let items = zoxide#exec(
+                \ ['query', '--list', '--score'],
+                \ a:query
+                \ )
+    if empty(items)
+        echohl ErrorMsg | echomsg 'zoxide: no match found' | echohl None
+        return
+    endif
     call luaeval('require("zoxide-vim").select(_A[1], _A[2])', [
-                \ zoxide#exec(['query', '--list', '--score'], a:query),
+                \ items,
                 \ a:cd_command,
                 \ ])
 endfunction
@@ -112,6 +129,10 @@ function! s:zoxide_zi_inputlist(cd_command, bang, query) abort
                 \ ['query', '--list', '--score'],
                 \ a:query
                 \ )
+    if empty(items)
+        echohl ErrorMsg | echomsg 'zoxide: no match found' | echohl None
+        return
+    endif
     let numbered_items = items->mapnew({key, val -> key + 1 .. '. ' .. val})
     let choice_index = inputlist(['Zoxide> '] + numbered_items)
 
