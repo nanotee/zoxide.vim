@@ -62,51 +62,63 @@ function! zoxide#handle_select_result(cd_command, result) abort
     call s:change_directory(a:cd_command, directory)
 endfunction
 
-if has('nvim') && (!exists('g:loaded_fzf') || get(g:, 'zoxide_use_select', 0))
-    function! zoxide#zi(cd_command, bang, ...) abort
-        call luaeval('require("zoxide-vim").select(_A[1], _A[2])', [
-                    \ zoxide#exec(['query', '--list', '--score'], a:000),
-                    \ a:cd_command,
-                    \ ])
-    endfunction
-else
-    let s:default_fzf_options = [
-                \ '--prompt=Zoxide> ',
-                \ '--exact',
-                \ '--no-sort',
-                \ '--bind=btab:up,tab:down',
-                \ '--cycle',
-                \ '--keep-right',
-                \ '--info=inline',
-                \ '--layout=reverse',
-                \ '--tabstop=1',
+let s:default_fzf_options = [
+            \ '--prompt=Zoxide> ',
+            \ '--exact',
+            \ '--no-sort',
+            \ '--bind=btab:up,tab:down',
+            \ '--cycle',
+            \ '--keep-right',
+            \ '--info=inline',
+            \ '--layout=reverse',
+            \ '--tabstop=1',
+            \ ]
+" Previews are only supported on UNIX.
+if has('unix')
+    " Non-POSIX args are only available on certain operating systems.
+    let s:default_fzf_options += [
+                \ has('linux') ?
+                \ '--preview=\command -p ls -Cp --color=always --group-directories-first {2..}' :
+                \ '--preview=\command -p ls -Cp {2..}',
                 \ ]
-    " Previews are only supported on UNIX.
-    if has('unix')
-        " Non-POSIX args are only available on certain operating systems.
-        let s:default_fzf_options += [
-                    \ has('linux') ?
-                    \ '--preview=\command -p ls -Cp --color=always --group-directories-first {2..}' :
-                    \ '--preview=\command -p ls -Cp {2..}',
-                    \ ]
 
-        " Rounded edges don't display correctly on some terminals.
-        let s:default_fzf_options += ['--preview-window=down,30%,sharp']
-        " `CLICOLOR=1` Enables colorized `ls` output on macOS / FreeBSD.
-        " `FORCE_CLICOLOR=1` Forces colorized `ls` output when the output is
-        " not a TTY (like in fzf's preview window) on macOS / FreeBSD.
-        " `sh -c` Ensures that the preview command is run in a POSIX-compliant
-        " shell, regardless of what shell the user has selected.
-        let s:default_fzf_options += ['--with-shell=env CLICOLOR=1 CLICOLOR_FORCE=1 sh -c']
-    endif
-
-    function! zoxide#zi(cd_command, bang, ...) abort
-        if !exists('g:loaded_fzf') | echoerr 'The fzf.vim plugin must be installed' | return | endif
-
-        call fzf#run(fzf#wrap('zoxide', {
-                    \ 'source': s:build_cmd(['query', '--list', '--score'], a:000),
-                    \ 'sink': funcref('zoxide#handle_select_result', [a:cd_command]),
-                    \ 'options': get(g:, 'zoxide_fzf_options', s:default_fzf_options),
-                    \ }, a:bang))
-    endfunction
+    " Rounded edges don't display correctly on some terminals.
+    let s:default_fzf_options += ['--preview-window=down,30%,sharp']
+    " `CLICOLOR=1` Enables colorized `ls` output on macOS / FreeBSD.
+    " `FORCE_CLICOLOR=1` Forces colorized `ls` output when the output is
+    " not a TTY (like in fzf's preview window) on macOS / FreeBSD.
+    " `sh -c` Ensures that the preview command is run in a POSIX-compliant
+    " shell, regardless of what shell the user has selected.
+    let s:default_fzf_options += ['--with-shell=env CLICOLOR=1 CLICOLOR_FORCE=1 sh -c']
 endif
+
+function! s:zoxide_zi_fzf(cd_command, bang, query) abort
+    call fzf#run(fzf#wrap('zoxide', {
+                \ 'source': s:build_cmd(['query', '--list', '--score'], a:query),
+                \ 'sink': funcref('zoxide#handle_select_result', [a:cd_command]),
+                \ 'options': get(g:, 'zoxide_fzf_options', s:default_fzf_options),
+                \ }, a:bang))
+endfunction
+
+function! s:zoxide_zi_nvim_ui_select(cd_command, bang, query) abort
+    call luaeval('require("zoxide-vim").select(_A[1], _A[2])', [
+                \ zoxide#exec(['query', '--list', '--score'], a:query),
+                \ a:cd_command,
+                \ ])
+endfunction
+
+function! s:zoxide_zi_noop(...) abort
+    echohl ErrorMsg | echomsg 'No picker available' | echohl None
+endfunction
+
+if get(g:, 'zoxide_use_select', 0) && has('nvim')
+    let s:zoxide_zi = funcref('s:zoxide_zi_nvim_ui_select')
+elseif get(g:, 'loaded_fzf', 0)
+    let s:zoxide_zi = funcref('s:zoxide_zi_fzf')
+else
+    let s:zoxide_zi = funcref(has('nvim') ? 's:zoxide_zi_nvim_ui_select' : 's:zoxide_zi_noop')
+endif
+
+function! zoxide#zi(cd_command, bang, ...) abort
+    call s:zoxide_zi(a:cd_command, a:bang, a:000)
+endfunction
