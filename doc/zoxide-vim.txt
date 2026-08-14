@@ -51,9 +51,11 @@ g:zoxide_prefix
 			:Jump
 			:Ljump
 			:Tjump
+			:Bjump
 			:Jumpi
 			:Ljumpi
 			:Tjumpi
+			:Bjumpi
 
 			Default value: `'z'`
 

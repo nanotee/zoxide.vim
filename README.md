@@ -40,4 +40,4 @@ See [zoxide-vim-configuration](doc/zoxide-vim.txt#L35)
 
 ## Events
 
-See [zoxide-vim-events](doc/zoxide-vim.txt#L98)
+See [zoxide-vim-events](doc/zoxide-vim.txt#L100)
