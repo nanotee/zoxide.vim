@@ -4,7 +4,7 @@ A small (Neo)Vim wrapper for [zoxide](https://github.com/ajeetdsouza/zoxide)
 
 ## Requirements
 
-- Vim >=8.2.1969 or >=Neovim 0.10.0
+- Vim >=8.2.1969 or Neovim >=0.10.0
 - The [zoxide](https://github.com/ajeetdsouza/zoxide) utility
 - (optional) The [fzf](https://github.com/junegunn/fzf) utility along with the [fzf.vim](https://github.com/junegunn/fzf/blob/master/plugin/fzf.vim) script
 
